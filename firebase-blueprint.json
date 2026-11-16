@@ -1,0 +1,121 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Authenticated user profile for portfolio visitors and job applicants.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Firebase Auth UID of the user."
+        },
+        "fullName": {
+          "type": "string",
+          "description": "User display name."
+        },
+        "email": {
+          "type": "string",
+          "description": "User email address."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of profile creation (FieldValue.serverTimestamp())."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of last update (FieldValue.serverTimestamp())."
+        }
+      },
+      "required": ["userId", "fullName", "email", "createdAt", "updatedAt"]
+    },
+    "JobApplication": {
+      "title": "JobApplication",
+      "description": "Private job application submitted for Teacher or Manager positions at Awais Akram Khan's institute.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Authenticated applicant UID."
+        },
+        "fullName": {
+          "type": "string",
+          "description": "Applicant full name."
+        },
+        "email": {
+          "type": "string",
+          "description": "Applicant Gmail or email address."
+        },
+        "mobileNumber": {
+          "type": "string",
+          "description": "Applicant mobile or WhatsApp number."
+        },
+        "cnicMasked": {
+          "type": "string",
+          "description": "Masked CNIC representation for safe display without exposing raw CNIC."
+        },
+        "cnicDigest": {
+          "type": "string",
+          "description": "SHA-256 digest of normalized CNIC for secure verification without plaintext exposure."
+        },
+        "position": {
+          "type": "string",
+          "enum": ["Teacher", "Manager"],
+          "description": "Selected job position."
+        },
+        "course": {
+          "type": "string",
+          "description": "Selected course or teaching subject."
+        },
+        "customCourse": {
+          "type": "string",
+          "description": "Optional custom course name when 'Other' is selected."
+        },
+        "dedupeKey": {
+          "type": "string",
+          "description": "Normalized position + course key to prevent duplicate applications."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["submitted"],
+          "description": "Submission status."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of submission (FieldValue.serverTimestamp())."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of last update (FieldValue.serverTimestamp())."
+        }
+      },
+      "required": [
+        "userId",
+        "fullName",
+        "email",
+        "mobileNumber",
+        "cnicMasked",
+        "cnicDigest",
+        "position",
+        "course",
+        "dedupeKey",
+        "status",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Owner-isolated user profile document."
+    },
+    "/users/{userId}/job_applications/{applicationId}": {
+      "schema": { "$ref": "#/entities/JobApplication" },
+      "description": "Owner-isolated job application submissions for Teacher and Manager roles."
+    }
+  }
+}
